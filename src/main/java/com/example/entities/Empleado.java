@@ -1,5 +1,10 @@
 package com.example.entities;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.example.model.Genero;
 
 import jakarta.persistence.Entity;
@@ -35,5 +40,13 @@ public class Empleado {
     // para que no guarde ordinal y guarde el nombre hay que anotar:
     @Enumerated(EnumType.STRING)
     private Genero genero;
+
+    // formato canonico de fecha (mm serían minutos en vez de meses)
+    @DateTimeFormat(pattern="yyyy-MM-dd") 
+    private LocalDate fechaAlta;
+
+    private BigDecimal salario;
+
+
 
 }
