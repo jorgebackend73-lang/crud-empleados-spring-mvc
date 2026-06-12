@@ -1,16 +1,36 @@
 package com.example.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.entities.Empleado;
+import java.util.List;
+import com.example.model.Genero;
+
+
 
 //  Creamos interface con la clase y su tipo wrap
 //  pq en el diamante no puede ir un tipo primitivo
 // @Repository indica que la clase anotada puede recibir beans
 
-@Repository
 public interface EmpleadoDao extends JpaRepository<Empleado, Integer> {
+	
+	/* Para generar métodos, además de los que ya se tienen por defecto en las interfaces
+	 * de la cuales hereda JpaRepository hay que hacer suministrando la sintaxis correcta
+	 * como se indica en los enlaces siguientes:
+	 * 
+	 * Oficial:
+	 * 
+	 * https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
+	 * 
+	 * Para aprender a generar y de forma más didactica:
+	 * 
+	 * https://www.baeldung.com/spring-data-derived-queries
+	 * 
+	 */
+	
+	List<Empleado> findByNombre(String nombre);
+		boolean existsByGenero(Genero genero);
 
     
 

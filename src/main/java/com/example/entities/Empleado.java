@@ -1,5 +1,6 @@
 package com.example.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
@@ -30,9 +31,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class Empleado {
+public class Empleado implements Serializable {
 
-    // Con las dos anotaciones de Id y GeneratedValue hacemos
+    // hay que serializar esta entidad para que extraiga correctamente los datos de la tabla
+	private static final long serialVersionUID = 1L;
+
+	// Con las dos anotaciones de Id y GeneratedValue hacemos
     // el id autoincremental, primary key y no admite nulo. 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
