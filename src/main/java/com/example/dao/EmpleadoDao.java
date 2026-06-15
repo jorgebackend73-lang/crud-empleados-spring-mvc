@@ -32,9 +32,11 @@ public interface EmpleadoDao extends JpaRepository<Empleado, Integer> {
 	 */
 	
 	// creado generando codigo AOT (Ahead Of Time) código que se genera adelantandose al tiempo.
-	List<Empleado> findByNombre(String nombre);
-		boolean existsByGenero(Genero genero);
-
+	// List<Empleado> findByNombre(String nombre);
+	
+	// lo anterior de momento no hace falta, está en la capa servicios y aquí sobra.
+	// basta con lo que implementa JpaRepository
+		
     
 
 }
