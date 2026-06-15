@@ -12,6 +12,8 @@ import com.example.model.Genero;
 //  Creamos interface con la clase y su tipo wrap
 //  pq en el diamante no puede ir un tipo primitivo
 // @Repository indica que la clase anotada puede recibir beans
+// En JpaRepository Empleado es la entidad para la que queremos crear los metodos
+// Integer es un wrapper de tipo de dato del id de la entidad.
 
 public interface EmpleadoDao extends JpaRepository<Empleado, Integer> {
 	
@@ -29,6 +31,7 @@ public interface EmpleadoDao extends JpaRepository<Empleado, Integer> {
 	 * 
 	 */
 	
+	// creado generando codigo AOT (Ahead Of Time) código que se genera adelantandose al tiempo.
 	List<Empleado> findByNombre(String nombre);
 		boolean existsByGenero(Genero genero);
 
