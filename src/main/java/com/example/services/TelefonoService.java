@@ -2,7 +2,7 @@ package com.example.services;
 
 import java.util.List;
 
-import com.example.entities.Correo;
+
 import com.example.entities.Empleado;
 import com.example.entities.Telefono;
 
@@ -21,6 +21,6 @@ public interface TelefonoService {
 	void deleteByEmpleado(Empleado empleado);
 	
 	// Método para encontrar todos los telefonos de un empleado
-	List<Correo> findByEmpleado(Empleado empleado);
+	List<Telefono> findByEmpleado(Empleado empleado);
 
 }
