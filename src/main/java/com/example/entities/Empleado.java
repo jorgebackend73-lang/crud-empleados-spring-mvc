@@ -70,6 +70,8 @@ public class Empleado implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "empleado")
     @Builder.Default
     private Set<Telefono> telefonos = new HashSet<>();
+    // no debería ser necesario, pero resulta mejor inicializar estas colecciones de teléfonos y correos
+    // así evitamos también null pointer exception.
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "empleado")
     @Builder.Default
