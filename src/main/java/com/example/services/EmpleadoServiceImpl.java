@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.dao.EmpleadoDao;
 import com.example.entities.Empleado;
-import com.example.services.EmpleadoService;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor // se trae de lombok las propiedades final de los objetos mediante constructor

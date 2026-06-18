@@ -14,13 +14,20 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name="departamentos")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+// Excluimos aqui a los empleados para que no de Stack 
+// Overflow al traer los empleados de prueba con los que choca.
+@ToString(exclude = "empleados") 
 @Builder
 public class Departamento implements Serializable{
 
