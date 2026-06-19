@@ -1,7 +1,10 @@
 package com.example.controllers;
 
-import com.example.services.EmpleadoServiceImpl;
-
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Controller;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.entities.Correo;
 import com.example.entities.Empleado;
+import com.example.entities.Telefono;
 import com.example.services.DepartamentoService;
 import com.example.services.EmpleadoService;
 
@@ -95,10 +100,68 @@ public class EmpleadoController {
 		LOG.info(empleado.toString());
 		LOG.info("Números de teléfono recibidos: " + numerosTelefono);
 		LOG.info("Direcciones de correo recibidas: " + direccionesCorreo);
+		
+		// Aquì para que se reciban adecuadamente telefonos y correos, 
+		// que vienen en un string separdos por ; 
+		// hay que convertirlos en una lista de objetos telefono y correo
+		// para luego agregarlos al objeto Empleado antes de persistirlo.
+		
+		// Declaramos Set de java util donde alojar nuestra lista de telefonos:
+		Set<Telefono> telefonos = new HashSet<Telefono>();
+		
+		// Pero primero preguntar si nos llegan tenlefonos:
+		if (!numerosTelefono.isEmpty() && !numerosTelefono.isBlank()) {
+			
+			// metemos los elementos de la cadena en un array:
+			String[] arrayNumerosTelefono = numerosTelefono.split(";");
+			
+			// El array lo convertimos en una lista que podremos recorrer
+			// Cada elemto es un string y la lista se llama listadoNumeros el tipo Array
+			// de java.util lo convetimos en esa lista con .asList al que le pasamos como hemos
+			// dicho el arrayNumerosTelefono:
+			List<String> listadoNumeros = Arrays.asList(arrayNumerosTelefono);
+			
+			// le pasamos la lista que recorremos con un forEach y a traves de una lambda
+			// los recibe y asigna adecuadamente a cada empleado recibido como parametro:
+			// Así se crea la lista de telefonos del empleado:
+			listadoNumeros.forEach(numero -> {
+				telefonos.add(Telefono.builder().numero(numero).empleado(empleado).build());
+			});
+			
+			empleado.setTelefonos(telefonos);
+			
+		}
 	
+		// Declaramos Set de java util donde alojar nuestra lista de telefonos:
+				Set<Correo> correos = new HashSet<Correo>();
+				
+				// Pero primero preguntar si nos llegan tenlefonos:
+				if (!direccionesCorreo.isEmpty() && !direccionesCorreo.isBlank()) {
+					
+					// metemos los elementos de la cadena en un array:
+					String[] arrayDireccionesCorreo = direccionesCorreo.split(";");
+					
+					// El array lo convertimos en una lista que podremos recorrer
+					// Cada elemto es un string y la lista se llama listadoNumeros el tipo Array
+					// de java.util lo convetimos en esa lista con .asList al que le pasamos como hemos
+					// dicho el arrayNumerosTelefono:
+					List<String> listadoCorreos = Arrays.asList(arrayDireccionesCorreo);
+					
+					// le pasamos la lista que recorremos con un forEach y a traves de una lambda
+					// los recibe y asigna adecuadamente a cada empleado recibido como parametro:
+					// Así se crea la lista de telefonos del empleado:
+					listadoCorreos.forEach(email -> {
+						correos.add(Correo.builder().email(email).empleado(empleado).build());
+					});
+					
+					empleado.setEmails(correos);
+					
+				}
+		
+		
 		// Se recibe un objeto Empleado con los datos del fromulario
 		// Se envía a la capa de servicios para que sea persistido
-		// empleadoService.saveEmpleado(empleado);
+		empleadoService.saveEmpleado(empleado);
 		
 		return "redirect:/empleados/listar"; // Redirige a la lista de empleados 
 		

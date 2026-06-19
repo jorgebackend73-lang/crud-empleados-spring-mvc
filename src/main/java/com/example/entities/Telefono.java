@@ -2,6 +2,8 @@ package com.example.entities;
 
 import java.io.Serializable;
 
+import ch.qos.logback.classic.turbo.TurboFilter;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,9 @@ public class Telefono implements Serializable {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+	
+	// con esta anotación evitamos teléfonos duplicados
+	@Column(name="numero", nullable = false, unique = true)
     private String numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
