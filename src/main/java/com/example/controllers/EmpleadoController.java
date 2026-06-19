@@ -71,8 +71,9 @@ public class EmpleadoController {
 	
 	// Método que muestra el formulario de creación de empleado
 	@GetMapping("/alta")
-	public String mostrarFormulariAlta(Model model) {
-
+	public String mostrarFormulariAlta(Model model,
+			@ModelAttribute Empleado empleado) {
+			// esto pasa ya el empleado vacio a ModelAtribute
 		
 		// Se necesitan los departamentos desde la capa de servicios
 		model.addAttribute("departamentos", 
@@ -80,7 +81,9 @@ public class EmpleadoController {
 		
 		// Es necesario enviar un objeto empleado vacio para que se vinculen sus propiedades
 		// con cada control (elemento input, select, etc.) del formulario:
-		model.addAttribute("empleado", new Empleado ());
+		// Al final lo comentamos pues con la anotación ModelAtribute ya se recibe
+		// como un parametro de ese método.
+		// model.addAttribute("empleado", new Empleado ());
 		
 		return "formularioAltaModificacion"; // Creamos vista en template
 	}
@@ -107,7 +110,9 @@ public class EmpleadoController {
 		// para luego agregarlos al objeto Empleado antes de persistirlo.
 		
 		// Declaramos Set de java util donde alojar nuestra lista de telefonos:
-		Set<Telefono> telefonos = new HashSet<Telefono>();
+		// Set<Telefono> telefonos = new HashSet<Telefono>();
+		// comentado lo de arriba pq y lo tenemos en la entidad empleado
+		// y lo estamos repitiendo aquí. Ya tenemos el set.
 		
 		// Pero primero preguntar si nos llegan tenlefonos:
 		if (!numerosTelefono.isEmpty() && !numerosTelefono.isBlank()) {
@@ -116,7 +121,7 @@ public class EmpleadoController {
 			String[] arrayNumerosTelefono = numerosTelefono.split(";");
 			
 			// El array lo convertimos en una lista que podremos recorrer
-			// Cada elemto es un string y la lista se llama listadoNumeros el tipo Array
+			// Cada elemto es un string y la lista se llama listadoNumeros del tipo Array
 			// de java.util lo convetimos en esa lista con .asList al que le pasamos como hemos
 			// dicho el arrayNumerosTelefono:
 			List<String> listadoNumeros = Arrays.asList(arrayNumerosTelefono);
@@ -125,15 +130,21 @@ public class EmpleadoController {
 			// los recibe y asigna adecuadamente a cada empleado recibido como parametro:
 			// Así se crea la lista de telefonos del empleado:
 			listadoNumeros.forEach(numero -> {
-				telefonos.add(Telefono.builder().numero(numero).empleado(empleado).build());
+				empleado.getTelefonos().add(Telefono
+						.builder()
+						.numero(numero)
+						.empleado(empleado)
+						.build());
 			});
 			
-			empleado.setTelefonos(telefonos);
+			// nos sobra pq ya tenemos los telefonos del empleado en la sentencia de arriba
+			// empleado.setTelefonos(telefonos);
 			
 		}
 	
 		// Declaramos Set de java util donde alojar nuestra lista de telefonos:
-				Set<Correo> correos = new HashSet<Correo>();
+		// Lo comentamos aquí tambien pq ya tenemos el set creado en la entidad Empleado.
+				// Set<Correo> correos = new HashSet<Correo>();
 				
 				// Pero primero preguntar si nos llegan tenlefonos:
 				if (!direccionesCorreo.isEmpty() && !direccionesCorreo.isBlank()) {
@@ -151,10 +162,14 @@ public class EmpleadoController {
 					// los recibe y asigna adecuadamente a cada empleado recibido como parametro:
 					// Así se crea la lista de telefonos del empleado:
 					listadoCorreos.forEach(email -> {
-						correos.add(Correo.builder().email(email).empleado(empleado).build());
+						empleado.getEmails().add(Correo
+								.builder()
+								.email(email)
+								.empleado(empleado)
+								.build());
 					});
 					
-					empleado.setEmails(correos);
+					// empleado.setEmails(correos);
 					
 				}
 		
