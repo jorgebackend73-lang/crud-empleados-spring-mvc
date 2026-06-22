@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.example.entities.Telefono;
 import com.example.services.DepartamentoService;
 import com.example.services.EmpleadoService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
@@ -92,12 +94,26 @@ public class EmpleadoController {
 	// Alta/Modificación Empleado
 	// Model Atribute coge al empleado
 	@PostMapping("/persistir")
-	public String procesarFormularioAltaModificacion (@ModelAttribute Empleado empleado,
+	public String procesarFormularioAltaModificacion (
+			@Valid
+			@ModelAttribute Empleado empleado,
+			BindingResult result, // esto justo depues del objeto empleado
 			@RequestParam String numerosTelefono,
-			@RequestParam String direccionesCorreo) {
+			@RequestParam String direccionesCorreo,
+			Model model) {
 		// queremos ademas del empleado otro parametro bajo name para numerosTelefono
 		// y convertirlo en string. Al convertir a una variable con el mismo nombre que el
 		// parametro no hace falta volver a escribirlo.
+		
+		// Comprobar si hay errores en la información procedente del form
+		if (result.hasErrors()) {
+			
+			model.addAttribute("departamentos", 
+				departamentoService.getAllDepartamentos());
+			
+			return "formularioAltaModificacion"; 
+			// si hay errores se vuelve a mostrar el form y hay q decirle q muestre de nuevo los departamentos
+		}
 		
 		LOG.info("Objeto empleado recibido");
 		LOG.info(empleado.toString());

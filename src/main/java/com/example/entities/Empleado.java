@@ -21,6 +21,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +50,10 @@ public class Empleado implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
+    // Anotaciones de validación:
+    @NotNull(message = "El nombre no puede estar vacio.")
+    @NotBlank(message = "El nombre no puede estar en blanco.")
+    @Size(min = 4, max = 30, message = "El nombre debe tener entre 4 y 30 caracteres.")
     private String nombre;
     private String primerApellido;
     private String segundoApellido;
