@@ -21,8 +21,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,9 +56,25 @@ public class Empleado implements Serializable {
     // Anotaciones de validación:
     @NotNull(message = "El nombre no puede estar vacio.")
     @NotBlank(message = "El nombre no puede estar en blanco.")
-    @Size(min = 4, max = 30, message = "El nombre debe tener entre 4 y 30 caracteres.")
+    @Size(min = 3, max = 30, message = "El nombre debe tener entre 3 y 30 caracteres.")
+    @Pattern(regexp = "^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s)?)+$", 
+        message = "La primera letra en mayusculas y solo letras minusculas después.")
     private String nombre;
+
+    // Anotaciones de validación:
+    @NotNull(message = "El primer apellido no puede estar vacio.")
+    @NotBlank(message = "El primer apellido no puede estar en blanco.")
+    @Size(min = 3, max = 30, message = "El primer apellido debe tener entre 3 y 30 caracteres.")
+    @Pattern(regexp = "^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s)?)+$", 
+        message = "La primera letra en mayusculas y solo letras minusculas después.")
     private String primerApellido;
+
+
+    // Anotaciones de validación:
+    @NotBlank(message = "El segundo apellido no puede estar en blanco.")
+    @Size(min = 3, max = 30, message = "El segundo apellido debe tener entre 3 y 30 caracteres.")
+    @Pattern(regexp = "^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s)?)+$", 
+        message = "La primera letra en mayusculas y solo letras minusculas después.")
     private String segundoApellido;
     
     // para que no guarde ordinal y guarde el nombre hay que anotar:
@@ -63,9 +82,15 @@ public class Empleado implements Serializable {
     private Genero genero;
 
     // formato canonico de fecha (mm serían minutos en vez de meses)
-    @DateTimeFormat(pattern="yyyy-MM-dd") 
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    // FECHA ALTA: hoy o anterior
+    @NotNull(message = "La fecha de alta es obligatoria")
+    @PastOrPresent(message = "La fecha de alta no puede ser futura") 
     private LocalDate fechaAlta;
 
+    // SALARIO: BigDecimal >= 1000
+    @NotNull(message = "El salario es obligatorio")
+    @DecimalMin(value = "1000.00", message = "El salario mínimo es 1000€")
     private BigDecimal salario;
 
     // Relación de muchos a uno. Aunq se bidireccional seguimos teneiendo que distinguir
