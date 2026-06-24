@@ -17,7 +17,8 @@
 
 	<fieldset>
 		<legend>Formulario de Alta o Modificación</legend>
-		<form th:action="@{/empleados/persistir}" method="post" th:object="${empleado}">
+		<form th:action="@{/empleados/persistir}" method="post" 
+			th:object="${empleado}" enctype="multipart/form-data">
 			<input type="hidden" th:field="*{id}">
 			<div>
 				<label for="nombre">Nombre:</label>
@@ -83,6 +84,12 @@
 
 
 				</select>
+			</div>
+
+			<div>
+				<label for="file">Foto del Empleado</label>
+					<input type="file" id="file" name="file" title="Selección de la imagen del empleado">
+
 			</div>
 
 			<div>

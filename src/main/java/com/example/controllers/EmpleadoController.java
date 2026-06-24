@@ -1,6 +1,12 @@
 package com.example.controllers;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entities.Correo;
 import com.example.entities.Empleado;
@@ -100,7 +107,8 @@ public class EmpleadoController {
 			BindingResult result, // esto justo depues del objeto empleado
 			@RequestParam String numerosTelefono,
 			@RequestParam String direccionesCorreo,
-			Model model) {
+			Model model,
+			@RequestParam(name="file", required = false) MultipartFile file) {
 		// queremos ademas del empleado otro parametro bajo name para numerosTelefono
 		// y convertirlo en string. Al convertir a una variable con el mismo nombre que el
 		// parametro no hace falta volver a escribirlo.
@@ -115,6 +123,29 @@ public class EmpleadoController {
 			// si hay errores se vuelve a mostrar el form y hay q decirle q muestre de nuevo los departamentos
 		}
 		
+		// preguntamos si han enviado foto del empleado para guardar el nombre de la foto en la propiedad 
+		// atributo o variable mienbro de la clase foto en la tabla y guardar el contenido
+		// de la foto com un archivo en el sistema de archivos (file system) del servidor.
+
+		if (file != null && !file.isEmpty()) {
+
+			// de esta forma siempre tendremos la ruta relativa este donde este guardado el proyecto
+			Path rutaRelativa = Paths.get("src/main/resources/static/imagenes");
+			String rutaAbsoluta = rutaRelativa.toFile().getAbsolutePath();
+			Path rutaCompleta = Paths.get(rutaAbsoluta + "/" + file.getOriginalFilename());
+
+			try {
+				byte[] bytesFotoRecibida = file.getBytes();
+				Files.write(rutaCompleta, bytesFotoRecibida);
+				empleado.setFoto(file.getOriginalFilename());
+			
+			} catch (IOException e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+
+		}
+
 		LOG.info("Objeto empleado recibido");
 		LOG.info(empleado.toString());
 		LOG.info("Números de teléfono recibidos: " + numerosTelefono);

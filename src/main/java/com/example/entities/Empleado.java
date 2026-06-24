@@ -109,6 +109,8 @@ public class Empleado implements Serializable {
     @Builder.Default
     private Set<Correo> emails = new HashSet<>();
 
+    private String foto;
+
 
 
 
