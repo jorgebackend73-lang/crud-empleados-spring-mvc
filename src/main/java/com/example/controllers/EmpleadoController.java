@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -227,5 +228,23 @@ public class EmpleadoController {
 		
 		return "redirect:/empleados/listar"; // Redirige a la lista de empleados 
 		
+	}
+
+	// Método que muestra los detalles de un empleado cuyo id se recibe como 
+	// parametro:
+
+	// le indicamos que coja el id del empleado que irá variando. Variable en la ruta.
+	@GetMapping("/details/{id}") 
+	
+	public String mostrarDetalle(Model model,
+		// con esto tenemos al empleado de la id recibida al que podremos pedir sus cositas. 
+		@PathVariable(name = "id", required = true) int empleado_id) {
+
+			// recuperar el empleado cuyo id se ha recibido como parametro:
+			// usamos el metodo que tenemos ya en EmpleadoService
+			model.addAttribute("empleado", 
+				empleadoService.getEmpleadoById(empleado_id));
+
+		return "details";
 	}
 }
