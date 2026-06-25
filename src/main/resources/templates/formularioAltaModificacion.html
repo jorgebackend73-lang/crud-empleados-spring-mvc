@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Formulario Alta/Modificacion</title>
+	<style>
+		.error {
+		color: red;
+		font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Formulario de Alta/Modificacion</h1>
+
+	<fieldset>
+		<legend>Formulario de Alta o Modificación</legend>
+		<form th:action="@{/empleados/persistir}" method="post" 
+			th:object="${empleado}" enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}">
+			<div>
+				<label for="nombre">Nombre:</label>
+				<input type="text" id="nombre" name="nombre" required="required" th:field="*{nombre}">
+				<p th:if="${#fields.hasErrors('nombre')}" 
+					th:errors="*{nombre}"
+						class="error">Nombre Incorrecto</p>
+			</div>
+			<div>
+				<label for="primerApellido">Primer Apellido:</label>
+				<input type="text" id="primerApellido" name="primerApellido" required="required"
+					th:field="*{primerApellido}">
+				<p th:if="${#fields.hasErrors('primerApellido')}" 
+					th:errors="*{primerApellido}"
+						class="error">Primer Apellido Incorrecto></p>
+			</div>
+			<div>
+				<label for="segundoApellido">Segundo Apellido:</label>
+				<input type="text" id="segundoApellido" name="segundoApellido" 
+					th:field="*{segundoApellido}">
+			</div>
+			<div>
+				<fieldset>
+					<legend>Genero</legend>
+					<label for="hombre">Hombre:</label>
+					<input type="radio" id="hombre" name="genero" value="HOMBRE" 
+						th:field="*{genero}">
+					<label for="mujer">Mujer:</label>
+					<input type="radio" id="mujer" name="genero" value="MUJER" 
+						th:field="*{genero}">
+					<label for="otro">Otro:</label>
+					<input type="radio" id="otro" name="genero" value="OTRO" 
+						th:field="*{genero}">
+				</fieldset>
+			</div>
+			<div>
+				<label for="salario">Salario:</label>
+				<input type="text" id="salario" name="genero" value="salario" 
+					th:field="*{salario}">
+			</div>
+			<div>
+				<label for="fechaAlta">Fecha de Alta:</label>
+				<input type="date" id="fechaAlta" name="fechaAlta" 
+					th:field="*{fechaAlta}">
+			</div>
+			<div>
+				<label for="numerosTelefono">Teléfonos:</label>
+				<input type="text" id="numerosTelefono" name="numerosTelefono" 
+					placeholder="Uno o varios separados por ;"
+					th:value="${numerosTelefono}">
+			</div>
+			<div>
+				<label for="direccionesCorreo">Correos Electrónicos:</label>
+				<input type="text" id="direccionesCorreo" name="direccionesCorreo"
+					placeholder="Uno o varios separados por ;"
+					th:value="${direccionesCorreo}">
+			</div>
+			<div>
+				<label for="departamentos">Departamento:</label>
+				<select id="departamentos" th:field="*{departamento}">
+					<option value=""></option>
+					<option th:each="dpto : ${departamentos}" 
+							th:value="${dpto.id}" 
+							th:text="${dpto.nombre}"></option>
+
+
+				</select>
+			</div>
+
+			<div>
+				<label for="file">Foto del Empleado</label>
+					<input type="file" id="file" name="file"
+						title="Selección de la imagen del empleado">
+				<div th:if="${empleado.id != 0 and empleado.foto != null}">
+					<h4>Foto actual del empleado: </h4>
+					<img th:src="@{/imagenes/}+${empleado.foto}" alt="Foto del Empleado"> 
+
+				</div>
+
+			</div>
+
+			<div>
+				<input type="submit" value="Alta/Modificacion">
+			</div>
+
+		</form>
+
+	</fieldset>
+
+</body>
+
+</html>
