@@ -5,6 +5,8 @@ import java.util.List;
 import com.example.entities.Correo;
 import com.example.entities.Empleado;
 
+
+
 public interface CorreoService {
 	
 	// traer o implentar los metodos de Correo

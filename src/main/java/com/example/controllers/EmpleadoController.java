@@ -1,17 +1,14 @@
 package com.example.controllers;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,8 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.entities.Correo;
 import com.example.entities.Empleado;
 import com.example.entities.Telefono;
+import com.example.services.CorreoService;
 import com.example.services.DepartamentoService;
 import com.example.services.EmpleadoService;
+import com.example.services.TelefonoService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +54,8 @@ public class EmpleadoController {
 	// private final EmpleadoServiceImpl empleadoService;
 	private final EmpleadoService empleadoService;
 	private final DepartamentoService departamentoService;
+	private final CorreoService correoService;
+	private final TelefonoService telefonoService;
 
 
 //	 EmpleadoController(EmpleadoServiceImpl empleadoServiceImpl) {
@@ -221,6 +222,15 @@ public class EmpleadoController {
 					
 				}
 		
+
+		// Solo con las altas y modificaciones es necesario eliminar teleonos y correos
+		if (empleado.getId() != 0) {
+		if (telefonoService.existsByEmpleado(empleado))
+			telefonoService.deleteByEmpleado(empleado);
+
+		if (correoService.existsByEmpleado(empleado))
+			correoService.deleteByEmpleado(empleado);
+		}
 		
 		// Se recibe un objeto Empleado con los datos del fromulario
 		// Se envía a la capa de servicios para que sea persistido
@@ -246,5 +256,51 @@ public class EmpleadoController {
 				empleadoService.getEmpleadoById(empleado_id));
 
 		return "details";
+	}
+
+	// Método para actualizar un empleado
+	// muy parecido a dar de alta pero partimos de un id existente
+	// Muestra en el formulario de Alta/Modificacion la info del empleado a actualizar
+	@GetMapping("/update/{id}")
+	public String updateEmpleado(Model model, 
+		@PathVariable(name = "id", required = true) int idEmpleado) {
+
+			Empleado empleado = empleadoService.getEmpleadoById(idEmpleado);
+
+			model.addAttribute("empleado", empleado);
+
+			model.addAttribute("departamentos", 
+				departamentoService.getAllDepartamentos());
+
+		// Proceasando tel y email, pq no se debe hacer en la vista
+		// Para no estar mareando con tanto método variable ahí abajo
+		
+			Set<Telefono> telefonos = empleado.getTelefonos();
+
+		if (telefonos.size() > 0) {
+
+			String numerosTelefono = telefonos.stream()
+				.map(telefono -> telefono.getNumero())
+				.collect(Collectors.joining(";"));
+
+			model.addAttribute("numerosTelefono", numerosTelefono);
+
+		}
+
+		Set<Correo> correos = empleado.getEmails();
+
+		if (correos.size() > 0) {
+
+			String direccionesCorreos = correos.stream()
+				.map(correo -> correo.getEmail())
+				.collect(Collectors.joining(";"));
+
+			model.addAttribute("direccionesCorreos", direccionesCorreos);
+
+
+		}
+		
+
+		return "formularioAltaModificacion";
 	}
 }
