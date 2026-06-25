@@ -94,6 +94,7 @@
 						title="Selección de la imagen del empleado">
 				<div th:if="${empleado.id != 0 and empleado.foto != null}">
 					<h4>Foto actual del empleado: </h4>
+					<img th:src="@{/imagenes/}+${empleado.foto}" alt="Foto del Empleado"> 
 
 				</div>
 

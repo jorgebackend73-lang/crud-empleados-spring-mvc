@@ -303,4 +303,39 @@ public class EmpleadoController {
 
 		return "formularioAltaModificacion";
 	}
+
+	//Metodo para eliminar un empleado, con sus correos y telefonos correspondientes.
+	// Así como la foto asociada si la tuviera.
+	@GetMapping("/delete/{idEmpleado}")
+	public String deleteEmpleado(Model model, @PathVariable int idEmpleado) {
+
+		// Comprobar si el empleado tiene foto para eliminarla:
+		Empleado empleadoEliminar = empleadoService.getEmpleadoById(idEmpleado);
+
+		if (empleadoEliminar.getFoto() != null) {
+
+			// Necesitamos la ruta relativa del fichero a eliminar:
+			Path rutaRelativa = Paths.get("src/main/resources/static/imagenes/" 
+				+ empleadoEliminar.getFoto());
+
+			if (Files.exists(rutaRelativa)) {
+
+				try {
+					Files.delete(rutaRelativa);
+				} catch (IOException e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+
+		// Eliminamos al empleado
+
+		empleadoService.deleteEmpleado(empleadoEliminar);
+
+		return "redirect:/empleados/listar";
+	}
+
 }
